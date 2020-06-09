@@ -14,6 +14,12 @@ from sympy import Symbol,Derivative
 sym=Symbol
 der=Derivative
 
+def sigmoid(z):
+     return(1/(1+np.exp(-z)))
+
+def hypothesis(x,theta):
+    h=np.dot(x,theta)
+    return(sigmoid(h))
 #hdir(C:\Users\Gulshan Rana\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Anaconda3 (64-bit))
 
 #add= "C:\Users\Gulshan Rana\Desktop\data_2ngenre.csv"
@@ -27,30 +33,25 @@ x= dataset[0:,1:-1]
 y_raw= dataset[0: , -1]
 #print(x.shape, y_raw.shape)
 #print(y_raw)
-
+n=len(y)
 print(x)
-y= np.zeros((200, 1))    #rreason of double brkt
-for i in range(200):
-    y[i][0]= y_raw[i]
+y= np.zeros((n, 1))    #rreason of double brkt
+y=y.reshape(y.shape[0],1)          #RESHAPING FOR SECONDARY NUMPY DIMENSION
  
-x_train, x_test, y_train, y_test= train_test_split(x, y, test_size=0.2)
-#print(y.shape)
-def sigmoid(z):
-     return(1/(1+np.exp(-z)))
+x_train, x_test, y_train, y_test= train_test_split(x, y, test_size=0.2)  # SPLITTING DATASET IN RATIO OF 4:1
 
-def hypothesis(x,theta):
-    h=np.dot(x,theta)
-    return(sigmoid(h))
+     
 
-theta=np.random.rand(x_train.shape[1],1)  #28*1
-H=hypothesis(x_train, theta)  #H=h
-alpha=0.01
+
+theta=np.random.rand(x_train.shape[1],1)  #   28*1
+H=hypothesis(x_train, theta)       #H=h
+alpha=0.01      #LEARNING RATE
 
 m= len(y)
 #print(m)
 #print((h-y).shape,x.shape)
 
-nditer=2000
+nditer=2000       #NUMBER OF ITERATION(LOOPING)
 
 for i in range(nditer):
     H=hypothesis(x_train,theta)
@@ -58,10 +59,10 @@ for i in range(nditer):
     
 
 op=hypothesis(x_test,theta)
-
+threshold=0.91
 c=0;
 for i in range(op.shape[0]):
-    if op[i][0]>0.91:
+    if op[i][0]>threshold:         #THRESHOLD=0.91
        op[i][0]=1;
     else:
         op[i][0]=0;
